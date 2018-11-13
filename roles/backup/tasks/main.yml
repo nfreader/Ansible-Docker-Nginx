@@ -1,0 +1,36 @@
+---
+- name: Create /root/.aws
+  file: 
+    path=/root/.aws
+    state=directory
+    owner=root
+  tags: core
+
+- name: Copy aws credentials
+  template:
+    src: .aws.j2
+    dest: /root/.aws/credentials
+
+- name: Copy aws config
+  copy:
+    src: config
+    dest: /root/.aws/config
+
+- name: Copy aws.sh
+  copy:
+    src: aws.sh
+    dest: /usr/local/bin/aws
+    mode: u+rwx
+
+- name: Copy backup.sh
+  template:
+    src: backup.sh
+    dest: /srv/www/backup.sh
+    mode: u+rwx
+
+- name: Add backup to cron
+  cron:
+    name: "core dump"
+    minute: "0"
+    hour: "0"
+    job: "/bin/bash /srv/www/backup.sh >> /root/log/cron.log 2>&1"

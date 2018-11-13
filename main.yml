@@ -1,0 +1,28 @@
+---
+# Set up a server to run Docker containers
+
+- hosts: core
+  become: yes
+  become_user: root
+  vars:
+    pip_install_packages:
+      - name: docker
+  vars_files:
+    # - vars/core.yml
+    - vars/sec.yml
+    - vars/mutable.yml
+  roles: 
+    - geerlingguy.pip
+    - geerlingguy.docker
+    - geerlingguy.firewall
+    - geerlingguy.security
+    - init
+    - core
+    - backup
+
+- hosts: site
+  vars_files:
+    - vars/mutable.yml
+  roles:
+    - site
+

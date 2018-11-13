@@ -1,0 +1,48 @@
+---
+- name: Get DO monitoring installation script
+  get_url:
+    url: https://agent.digitalocean.com/install.sh
+    dest: /root/do.sh
+
+- file:
+    path: /root/do.sh
+    state: file
+    mode: "u=+x"
+
+- name: Install DO monitoring script
+  shell: /root/do.sh
+  creates: /opt/digitalocean/bin/do-agent
+
+- name: Update apt cache, clean, and remove
+  apt: 
+    update_cache: yes
+    autoclean: yes
+    autoremove: yes
+
+# - name: Generate secure dhparam
+#   command: openssl dhparam -out dhparam.pem 4096
+#   args:
+#     chdir: /etc/ssl/certs
+#     creates: /etc/ssl/certs/dhparam.pem
+#   async: 10000
+#   poll: 0
+
+- name: Add PATH to cron env
+  cron:
+    env=yes
+    name=PATH
+    value="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+
+- name: Create cron log directory
+  file: 
+    path=/root/log
+    state=directory
+    owner=root
+  tags: init
+
+- name: Create cron job log
+  copy:
+    content=""
+    dest=/root/log/cron.log
+    owner=root
+  tags: init

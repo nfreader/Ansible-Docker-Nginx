@@ -1,0 +1,49 @@
+---
+- name: Create /srv/www
+  file: 
+    path=/srv/www
+    state=directory
+    owner=root
+  tags: core
+
+- name: Get git
+  apt:
+    name: git
+    state: present
+
+- name: Clone nginx site set up
+  git:
+    repo: 'https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git'
+    dest: /srv/www
+  ignore_errors: yes #Ignored because we're using this playbook on existing setups
+
+- name: Copy .env
+  template:
+    src: .env.j2
+    dest: /srv/www/.env
+
+- name: Copy docker-compose.yml
+  copy:
+    src: docker-compose.yml
+    dest: /srv/www/docker-compose.yml
+
+- name: Create sites configuration directory
+  file: 
+    path=/srv/www/sites
+    state=directory
+    owner=root
+  tags: core
+
+- name: Restart docker
+  service:
+    name: docker
+    state: restarted
+
+- name: Create webproxy network
+  command: docker network create webproxy
+  ignore_errors: yes
+
+- name: Start docker core
+  command: './start.sh'
+  args:
+    chdir: /srv/www

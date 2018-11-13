@@ -1,0 +1,2 @@
+backup_bucket: <<S3 bucket for your backups>>
+letsencrypt_email: <<Email to use for your letsencrypt certificates>>

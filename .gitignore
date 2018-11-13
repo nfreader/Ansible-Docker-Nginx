@@ -1,0 +1,4 @@
+credentials/*
+vars/mutable.yml
+*.retry
+inventory

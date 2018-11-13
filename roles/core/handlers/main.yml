@@ -1,0 +1,5 @@
+---
+- name: restart docker core
+  command: docker-compose down && ./start.sh
+  args:
+    chdir: /srv/www

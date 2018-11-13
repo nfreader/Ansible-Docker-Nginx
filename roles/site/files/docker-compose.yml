@@ -1,0 +1,18 @@
+version: '3'
+services:
+  website:
+    # image: php:7.2-apache
+    build: .
+    restart: unless-stopped
+    volumes:
+      - /srv/www/data/html/${SITE}:/var/www/html
+    environment:
+       VIRTUAL_HOST: ${DOMAINS}
+       LETSENCRYPT_HOST: ${DOMAINS}
+       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+       LETSENCRYPT_TEST: ${LETSENCRYPT_TEST}
+
+networks:
+    default:
+       external:
+         name: ${NETWORK}
