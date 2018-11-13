@@ -6,7 +6,6 @@
 BUCKET={{ backup_bucket }}
 DATE=$(date -d "today" +"%Y%m%d%H%M");
 HOST=$(hostname -f)
-source /srv/www/.env
 mkdir ~/backup;
 docker exec db sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' | gzip -c > ~/backup/$DATE-sql-dump.sql.gz;
 tar -zcf ~/backup/$DATE-file-dump.tar --exclude-vcs-ignores --exclude-vcs --exclude='/srv/www/data/db' /srv/www/data;
