@@ -30,7 +30,13 @@ Servers in the `core` inventory group are the root-level docker hosts:
 #### init
 Installs the DigitalOcean monitoring script, configures cron.
 
-### core
+#### backup
+Copies AWS-CLI configuration files to `/root/.aws`, copies a backup script to `/srv/www` and adds it to cron
+
+##### backup.sh
+This runs mysqldump in the db container and pipes the output to a compressed file. It also compresses the contents of `/srv/www/data` (excluding `db`). Both of these compressed files are copied to a remote S3 bucket.
+
+#### core
 Clones `https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion` and configures some settings. We're using a modified docker-compose file because we also want to spin up a MariaDB server. 
 
 ### Site
