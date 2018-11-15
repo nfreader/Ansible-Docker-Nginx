@@ -47,3 +47,4 @@ Servers in the `site` inventory will get their own special docker-compose.yml an
 ## TODO
 - Per-site system users for better separation of website files
 - One PHP-FPM container (research indicates that this is not possible/recommended at this point)
+- Convert all `command` module docker invocations to use ansible-native docker modules

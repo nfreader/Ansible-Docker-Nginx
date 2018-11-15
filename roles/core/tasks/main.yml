@@ -47,3 +47,24 @@
   command: './start.sh'
   args:
     chdir: /srv/www
+
+- name: Create /srv/www/php
+  file: 
+    path=/srv/www/php
+    state=directory
+    owner=root
+  tags: core
+
+# - name: Copy Dockerfile
+#   copy:
+#     src: Dockerfile
+#     dest: /srv/www/php/Dockerfile
+
+# - name: Build site image
+#   docker_image: 
+#     name: site-php
+#     dockerfile: /srv/www/php/Dockerfile
+#     state: present
+
+
+

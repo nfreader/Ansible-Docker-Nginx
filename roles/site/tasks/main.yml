@@ -26,3 +26,17 @@
   command: docker-compose up -d
   args:
     chdir: /srv/www/sites/{{ inventory_hostname }}
+
+# - name: Start site docker container
+#   docker_container:
+#     cleanup: yes
+#     detach: yes
+#     build: .
+#     restart_policy: unless-stopped
+#     volumes:
+#       - /srv/www/data/html/{{ inventory_hostname }}:/var/www/html
+#     env_file: /srv/www/sites/{{ inventory_hostname }}/.env
+#     networks:
+#       - name: default
+#         links:
+#           - webproxy
