@@ -6,6 +6,11 @@
     owner=root
   tags: core
 
+- name: Stop site docker container
+  command: docker-compose down
+  args:
+    chdir: /srv/www/sites/{{ inventory_hostname }}
+
 - name: Copy .env
   template:
     src: .env.j2
@@ -23,7 +28,7 @@
     dest: /srv/www/sites/{{ inventory_hostname }}/Dockerfile
 
 - name: Start site docker container
-  command: docker-compose up -d
+  command: docker-compose up -d --build --force-recreate
   args:
     chdir: /srv/www/sites/{{ inventory_hostname }}
 

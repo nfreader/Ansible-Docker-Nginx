@@ -9,10 +9,11 @@ RUN set -ex; \
   apt-get install -y --no-install-recommends \
     libjpeg-dev \
     libpng-dev \
+    libbz2-dev \
   ; \
   \
   docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
-  docker-php-ext-install gd mysqli pdo_mysql json opcache zip; \
+  docker-php-ext-install bz2 gd mysqli pdo_mysql json opcache zip; \
   \
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
   apt-mark auto '.*' > /dev/null; \
