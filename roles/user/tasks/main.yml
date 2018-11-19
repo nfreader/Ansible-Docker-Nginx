@@ -1,0 +1,53 @@
+---
+- name: Check if domain user exists
+  stat:
+    path: /home/{{inventory_hostname}}
+  register: domainuser
+  tags: site
+
+- name: Create domain user
+  user:
+    name: "{{inventory_hostname}}"
+    group: www-data
+    generate_ssh_key: yes
+    createhome: yes
+    ssh_key_bits: 2048
+    state: present
+    shell: /bin/bash
+    append: yes
+  tags: site
+  when: domainuser.stat.exists == false
+  become: true
+
+- name: Acquire user SSH pubkey
+  fetch:
+    src: /home/{{inventory_hostname}}/.ssh/id_rsa.pub
+    dest: credentials/{{inventory_hostname}}/id_rsa.pub
+    flat: yes
+  tags: site
+
+- name: Add domain user SSH keys from ansible host
+  authorized_key:
+    user: "{{inventory_hostname}}"
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  tags: site
+
+- name: Create new domain docroot
+  file:
+    path: /srv/www/data/html/{{inventory_hostname}}
+    state: directory
+    mode: u=rwX,g=rX,o=rX
+    recurse: yes
+    owner: "{{inventory_hostname}}"
+    group: www-data
+
+#Create a shortcut to the docroot
+- name: Link www
+  file:
+    dest: /home/{{inventory_hostname}}/www
+    src: /srv/www/data/html/{{inventory_hostname}}
+    state: link
+    owner: "{{inventory_hostname}}"
+    group: www-data
+    mode: 0644
+  tags: site

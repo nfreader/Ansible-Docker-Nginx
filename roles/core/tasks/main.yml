@@ -15,7 +15,7 @@
   git:
     repo: 'https://github.com/evertramos/docker-compose-letsencrypt-nginx-proxy-companion.git'
     dest: /srv/www
-  ignore_errors: yes #Ignored because we're using this playbook on existing setups
+  ignore_errors: yes #Ignored because we'll be using this playbook on existing setups
 
 - name: Copy .env
   template:

@@ -44,6 +44,9 @@ This runs mysqldump in the db container and pipes the output to a compressed fil
 Servers in the `site` inventory will get their own special docker-compose.yml and .env copied to the `core` server. We then run those docker-compose files so that each site gets its own php-fpm-apache webserver, reverse-proxied to the primary nginx webserver.
 - site
 
+#### user
+This creates a system user with the same login as the corresponding inventory hostname and adds them to the `www-data` group. The document root is created at `/srv/www/data/html/{{inventory_hostname}}`. An SSH key is generated and the public key is copied to the host system. A symlink to the domain's document root is created at `/home/{{inventory_hostname}}/www`. 
+
 ## TODO
 - Per-site system users for better separation of website files
 - One PHP-FPM container (research indicates that this is not possible/recommended at this point)
